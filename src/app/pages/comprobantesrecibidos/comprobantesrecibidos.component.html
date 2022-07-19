@@ -1,0 +1,173 @@
+<section class="content" >
+    <div class="container-fluid">
+      <div class="card card-default">
+        <div class="card-header" >
+          <h3 class="card-title"><i class="fas fa-search"></i> Filtros de Busqueda</h3>
+
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+              <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <form [formGroup]="formularioFilter">
+        <!-- /.card-header -->
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-2">
+              <div class="form-group">
+                <label>Fecha Inicial</label>
+                <input type="date" formControlName="fecha_inicial" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label>Fecha Final</label>
+                <input type="date" formControlName="fecha_final" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label>&nbsp;</label>
+                <select class="form-control select2" formControlName="tipocomprobante" style="width: 100%;">
+                 <option value="00">Tipo de Comprobante</option>
+                 <option value="01">Factura</option>
+                 <option value="03">Boleta</option>
+                 <option value="07">Nota de Credito</option>
+                 <option value="08">Nota de Debito</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <label>&nbsp;</label>
+                <input type="text" formControlName="serie" placeholder="Serie" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <label>&nbsp;</label>
+                <input type="text" formControlName="numero" placeholder="Numero" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label>&nbsp;</label>
+                <input type="text" formControlName="razon_social" placeholder="Razon Social Receptor" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-2">
+              
+              <div class="form-group">
+                <label>&nbsp;</label>
+                <select class="form-control select2" formControlName="estado" style="width: 100%;">
+                  <option selected>Seleccione Estado</option>
+                  <option value="A">Aceptado</option>
+                  <option value="H">Pendientes</option>
+                  <option value="E">Error</option>
+                 </select>
+              </div>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+              <div class="btn-group">
+                <button (click)="buscar()" class="btn btn-primary start">
+                  <i class="fas fa-search"></i> 
+                  <span> Buscar</span>
+                </button>
+                <button (click)="reset()" data-dz-remove class="btn btn-warning cancel">
+                  <i class="fas fa-backspace"></i>
+                  <span> Limpiar</span>
+                </button>
+                <button (click)="exportarExcel()" data-dz-remove class="btn btn-success delete">
+                  <i class="fas fa-file-excel"></i>
+                  <span> Exportar a Excel</span>
+                </button>
+              </div>
+            </div>
+            <div class="btn-group p-4"  >
+
+              <div  class="btn-group" role="group">
+                <button id="btnGroupDrop1" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-download"></i> Opciones de Descarga
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                  <a class="dropdown-item" href="#" ><img src="assets/img/xml.png"> Descargar XML</a>
+                  <a class="dropdown-item" href="#"> <img src="assets/img/cdr.png"> Descargar CDR</a>
+                  <a class="dropdown-item" href="#"> <img src="assets/img/pdf.png"> Descargar PDF</a>
+                </div>
+              </div>
+              
+            </div>
+
+          </div>
+        
+        </div>
+        </form>
+        <div class="card-footer">
+          
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 class="card-title"></h3>
+            </div>
+            <div class="card-body">
+              <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" id="tabla-excel" class="table table-white table table-striped-columns">
+                <thead>
+                <tr>
+                      <th><form [formGroup]="FormCheck" class="form-check">
+                        <input class="form-check-input" formControlName="seleccionarTodo" type="checkbox" value="" id="flexCheckDefault">
+                        <label for="">&nbsp;</label>
+                      </form></th>
+                      <th>RUC</th>
+                      <th>Receptor</th>
+                      <th>Tipo de Comprobantes</th>
+                      <th>Comprobante</th>
+                      <th>Total</th>
+                      <th>Fecha de Emisión</th>
+                      <th>Estado</th>
+                      <th>Descargas</th>
+                </tr>
+                </thead>
+                <tbody>
+                 
+                    <tr *ngFor="let cliente of listacliente ">
+                      <th scope="row">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        </div>
+                      </th>
+                      <td>{{cliente.rucdni}}</td>
+                      <td>{{cliente.Receptor}}</td>
+                      <td>{{cliente.Tipo}}</td>                                        
+                      <td> {{cliente.Serie}}-{{cliente.numero}}</td>
+                      <td>{{cliente.total}}</td>
+                      <td>{{cliente.FecEmiCom | date:"d/M/yy" }}</td>
+                      <td>{{cliente.Estado}}</td>
+                      <td>
+                        <a href="assets/img/FE01-00001749.pdf" target="_blank"><button type="button" (click)="DescargarPDF(cliente)" class="btn btn-outline-danger"><img src="assets/img/pdf.png"></button></a>&nbsp;
+                        <!-- <button type="button" (click)="DescargarPDF(cliente)" class="btn btn-outline-danger"><img src="assets/img/pdf.png"></button>&nbsp; -->
+                        <button type="button" (click)="DescargarXML(cliente)" class="btn btn-outline-info"><img src="assets/img/xml.png"></button>&nbsp;
+                        <button type="button" (click)="DescargarCRD(cliente)" class="btn btn-outline-success"><img src="assets/img/cdr.png"></button> 
+                      </td>
+                    </tr>
+                  
+                </tbody>
+
+              </table>
+            </div>
+            <div class="card-footer">
+             
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </section>
